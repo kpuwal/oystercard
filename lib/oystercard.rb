@@ -1,3 +1,4 @@
+
 class Oystercard
 
   MAXIMUM_BALANCE = 90
@@ -44,6 +45,6 @@ class Oystercard
 
   def will_exceed_maximum?(amount)
   	(@balance + amount) > MAXIMUM_BALANCE
-  end
-
 end
+end
+
