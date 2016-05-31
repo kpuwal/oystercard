@@ -6,6 +6,8 @@ describe Oystercard do
     it { is_expected.to respond_to :balance }
     it { is_expected.to respond_to(:top_up).with(1).argument }
     it { is_expected.to respond_to(:deduct).with(1).argument }
+    it { is_expected.to respond_to(:touch_in) }
+    it { is_expected.to respond_to(:touch_out) }
   end
 
   context '#top_up' do
@@ -60,6 +62,19 @@ describe Oystercard do
     it 'raises an error if balance would go below zero' do
       expect{card.deduct(11)}.to raise_error("Insufficient funds")
     end
+  end
+
+  context '#touch_in' do
+  	it "sets in_journey? to true" do
+  		expect(card.touch_in).to eq true
+  	end
+  end
+
+  context '#touch_out' do
+  	it "sets in_journey? to false" do
+  		card.touch_in
+  		expect(card.touch_out).to eq false
+  	end
   end
 
   context ':balance' do
