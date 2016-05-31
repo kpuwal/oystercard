@@ -2,12 +2,15 @@ require 'oystercard'
 
 describe Oystercard do
   subject(:card) { described_class.new } 
+
+  let(:station1) { double(:station1) }
   
   context 'responses' do
     it { is_expected.to respond_to :balance }
     it { is_expected.to respond_to(:top_up).with(1).argument }
-    it { is_expected.to respond_to(:touch_in) }
+    it { is_expected.to respond_to(:touch_in).with(1).argument }
     it { is_expected.to respond_to(:touch_out) }
+    it { is_expected.to respond_to(:entry_station) } 
   end
 
   context '#top_up' do
@@ -44,29 +47,38 @@ describe Oystercard do
     end
 
     it "sets in_journey? to true" do
-      expect(card.touch_in).to eq true
+      expect(card.touch_in(station1)).to eq true
     end
 
     it "raises an error if balance is insufficient" do
       blank_card = Oystercard.new
-      expect{ blank_card.touch_in }.to raise_error("Insufficient funds")
+      expect{ blank_card.touch_in(station1) }.to raise_error("Insufficient funds")
+    end
+
+    it "sets entry station" do
+    	card.touch_in(station1)
+    	expect(card.entry_station).to eq station1
     end
   end
 
   context '#touch_out' do
     before(:each) do
       card.top_up(5)
+      card.touch_in(station1)
     end
 
     it "sets in_journey? to false" do
-      card.touch_in
       expect(card.touch_out).to eq false
     end
 
     it "deducts 1 from balance" do
-      card.touch_in
       expect{ card.touch_out }.to change{ card.balance }.by(-1)
     end
+
+    it "sets entry station to nil" do
+    	card.touch_out
+    	expect(card.entry_station).to eq nil
+    end	
   end
 
   context ':balance' do
