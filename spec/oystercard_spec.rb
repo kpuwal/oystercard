@@ -1,11 +1,11 @@
 require 'oystercard'
 
 describe Oystercard do
-  let(:card) { described_class.new } 
+  subject(:card) { described_class.new } 
+  
   context 'responses' do
     it { is_expected.to respond_to :balance }
     it { is_expected.to respond_to(:top_up).with(1).argument }
-    it { is_expected.to respond_to(:deduct).with(1).argument }
     it { is_expected.to respond_to(:touch_in) }
     it { is_expected.to respond_to(:touch_out) }
   end
@@ -38,43 +38,35 @@ describe Oystercard do
     end
   end
 
-  context '#deduct' do
-    before(:each) do
-      card.top_up(10)
-    end
-    
-    it 'deducts from the card' do
-      expect{card.deduct(0)}.not_to raise_error
-    end
-    
-    it 'deducts 10 from the card' do
-      expect(card.deduct(10)).to eq 0
-    end
-
-    it 'deducts 5 from the card' do
-      expect(card.deduct(5)).to eq 5
-    end
-
-    it 'raises an error if not an integer' do
-      expect{card.deduct("foo")}.to raise_error("Please input an integer")
-    end
-    
-    it 'raises an error if balance would go below zero' do
-      expect{card.deduct(11)}.to raise_error("Insufficient funds")
-    end
-  end
-
   context '#touch_in' do
-  	it "sets in_journey? to true" do
-  		expect(card.touch_in).to eq true
-  	end
+    before(:each) do
+      card.top_up(5)
+    end
+
+    it "sets in_journey? to true" do
+      expect(card.touch_in).to eq true
+    end
+
+    it "raises an error if balance is insufficient" do
+      blank_card = Oystercard.new
+      expect{ blank_card.touch_in }.to raise_error("Insufficient funds")
+    end
   end
 
   context '#touch_out' do
-  	it "sets in_journey? to false" do
-  		card.touch_in
-  		expect(card.touch_out).to eq false
-  	end
+    before(:each) do
+      card.top_up(5)
+    end
+
+    it "sets in_journey? to false" do
+      card.touch_in
+      expect(card.touch_out).to eq false
+    end
+
+    it "deducts 1 from balance" do
+      card.touch_in
+      expect{ card.touch_out }.to change{ card.balance }.by(-1)
+    end
   end
 
   context ':balance' do
