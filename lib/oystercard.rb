@@ -20,7 +20,7 @@ class Oystercard
 
   def touch_out(exit)
     deduct(MINIMUM_FARE)
-    journeys[@entry_station] = exit
+    journeys[@entry_station.data] = exit.data
     @entry_station = nil
     in_journey?
   end
