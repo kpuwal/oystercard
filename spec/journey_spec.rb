@@ -44,19 +44,19 @@ describe Journey do
     # end
   end
 
-  describe '#clear' do
+  describe '#fresh' do
     before(:each) do
       journey.start(station1)
       journey.finish(station2)
     end
 
     it 'clears entry station' do
-      journey.clear
+      journey.fresh
       expect(journey.entry_station).to eq nil
     end
 
     it 'clears exit station' do
-      journey.clear
+      journey.fresh
       expect(journey.end_station).to eq nil
     end
   end
@@ -84,6 +84,15 @@ describe Journey do
 
       it 'generates a journey' do
         expect(journey.all_journeys).to eq({station1 => station2})
+      end
+      
+      it'generates multiple journeys' do
+        3.times do
+          journey.start(station1)
+          journey.finish(station2)
+        end
+        expect(journey.all_journeys).to eq({station1 => station2,
+          station1 => station2, station1 => station2, station1 =>station2})
       end
     end
   end

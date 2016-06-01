@@ -5,7 +5,6 @@ class Oystercard
 
   def initialize(journey= Journey.new)
     @balance = DEFAULT_MIN
-    @journeys = {}
     @journey= journey
   end
   
@@ -17,13 +16,13 @@ class Oystercard
   def touch_in(entry)
     fail "Insufficient funds" if @balance < MINIMUM_FARE
     journey.start(entry)
-    in_journey?
   end
 
-  def touch_out(exit)
-    deduct(MINIMUM_FARE)
-    journeys[@entry_station.data] = exit.data
-    in_journey?
+  def touch_out(finish)
+    journey.finish(finish)
+    value = journey.fare
+    deduct(value)
+    journey.fresh
   end
 
   private
@@ -57,10 +56,5 @@ class Oystercard
 
   def is_number?(value)
     value.is_a? Integer
-  end
-
-  def in_journey?
-    return true if entry_station
-    false
   end
 end
