@@ -1,8 +1,13 @@
 class Journey
-  attr_reader :entry_station
+  attr_reader :entry_station, :end_station, :in_journey, :all_journeys
+  
+  MINIMUM_FARE = 1
 
   def initialize
     @entry_station
+    @end_station
+    @in_journey = false
+    @all_journeys = {}
   end
 
   def start(station)
@@ -11,7 +16,13 @@ class Journey
   end
 
   def finish(station)
-    false
+    @end_station = station
+    @all_journeys[entry_station] = end_station
+    @in_journey = false
+  end
+
+  def fare
+    @fare = MINIMUM_FARE
   end
 
 end

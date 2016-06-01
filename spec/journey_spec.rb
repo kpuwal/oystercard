@@ -17,19 +17,53 @@ describe Journey do
     end
   end
 
-describe '#finish' do
+  describe '#finish' do
   
-  before(:each) do 
-    journey.start(station1)
+    before(:each) do 
+      journey.start(station1)
+    end
+
+    it 'sets the journey to be false' do
+      expect(journey.finish(station2)).to eq false
+    end
+
+    it 'sets the end station' do
+      journey.finish(station2)
+      expect(journey.end_station).to eq station2
+    end
   end
 
-  it 'sets the journey to be false' do
-    expect(journey.finish(station2)).to eq false
+  describe '#fare' do
+    it 'has a default fare value' do
+      expect(journey.fare).to eq 1
+    end
   end
 
+  describe ':in_journey' do
+    it 'changes state of in_journey' do
+      expect(journey.in_journey).to eq false
+      journey.start(station1)
+      expect(journey.in_journey).to eq true
+      journey.finish(station2)
+      expect(journey.in_journey).to eq false
+    end
+  end
 
-end
+  describe ':all_journeys' do
+    it 'creates an empty all_journeys hash' do
+      expect(journey.all_journeys).to be_a(Hash)
+    end
+    
+    context 'recording journeys' do
+      before(:each) do
+        journey.start(station1)
+        journey.finish(station2)
+      end
 
-
+      it 'generates a journey' do
+        expect(journey.all_journeys).to eq({station1 => station2})
+      end
+    end
+  end
 end
 
