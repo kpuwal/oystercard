@@ -3,8 +3,8 @@ require 'oystercard'
 describe Oystercard do
   subject(:card) { described_class.new } 
 
-  let(:station1) { double(:station1) }
-  let(:station2) { double(:station2) }
+  let(:station1) { double(:station1, :data => {:monument => 1}) }
+  let(:station2) { double(:station2, :data => {:aldgate_east => 2}) }
 
   context 'responses' do
     it { is_expected.to respond_to :balance }
@@ -104,7 +104,7 @@ describe Oystercard do
       end
 
       it 'generates a journey' do
-        expect(card.journeys).to eq({station1 => station2})
+        expect(card.journeys).to eq({station1.data => station2.data})
       end
 
       it 'generates multiple journeys' do
@@ -112,8 +112,8 @@ describe Oystercard do
           card.touch_in(station1)
           card.touch_out(station2)
         end
-        expect(card.journeys).to eq({station1 => station2, station1 => station2,
-                                     station1 => station2, station1 => station2})
+        expect(card.journeys).to eq({station1.data => station2.data, station1.data => station2.data,
+                                     station1.data=> station2.data, station1.data => station2.data})
       end
     end
   end
