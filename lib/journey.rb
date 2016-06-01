@@ -25,4 +25,9 @@ class Journey
     @fare = MINIMUM_FARE
   end
 
+  def clear
+    @entry_station= nil
+    @end_station= nil
+  end
+
 end

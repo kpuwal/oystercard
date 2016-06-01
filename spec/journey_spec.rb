@@ -37,6 +37,28 @@ describe Journey do
     it 'has a default fare value' do
       expect(journey.fare).to eq 1
     end
+
+    # it 'charges penalty fare' do
+    #   journey.finish(station2)
+    #   expect(journey.fare).to eq 6
+    # end
+  end
+
+  describe '#clear' do
+    before(:each) do
+      journey.start(station1)
+      journey.finish(station2)
+    end
+
+    it 'clears entry station' do
+      journey.clear
+      expect(journey.entry_station).to eq nil
+    end
+
+    it 'clears exit station' do
+      journey.clear
+      expect(journey.end_station).to eq nil
+    end
   end
 
   describe ':in_journey' do
