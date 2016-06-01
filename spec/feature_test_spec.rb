@@ -11,5 +11,6 @@ describe 'feature test' do
 	# my_card.entry_station
 	# my_card.touch_in
 	#my_card.entry_station?
-	
+	#my_card.journey_history
+	#journey_history[:entry_station] = exit_station
 end 
