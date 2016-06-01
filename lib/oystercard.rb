@@ -1,38 +1,66 @@
+
+
 class Oystercard
-  MAXIMUM_BALANCE = 90
-  MINIMUM_FARE = 1
-  attr_reader :balance, :entry_station
+  attr_reader :balance, :entry_station, :journeys
 
   def initialize
-    @lower_limit= MINIMUM_FARE
-    @upper_limit= MAXIMUM_BALANCE
-    @balance= 0
-    @entry_station= nil
+    @balance = DEFAULT_MIN
+    @journeys = {}
   end
-
+  
   def top_up(value)
-    fail "top up exceeds balance limit, cannot top up" if balance+value > upper_limit
+    top_up_fail(value)
     @balance += value
   end
-
-  def in_journey?
-    !!entry_station
+  
+  def touch_in(entry)
+    fail "Insufficient funds" if @balance < MINIMUM_FARE
+    @entry_station = entry
+    in_journey?
   end
 
-  def touch_in(station)
-    fail "Infsufficient balance" if balance < lower_limit
-    @entry_station= station
-  end
-
-  def touch_out
+  def touch_out(exit)
     deduct(MINIMUM_FARE)
-    @entry_station= nil
+    journeys[@entry_station.data] = exit.data
+    @entry_station = nil
+    in_journey?
   end
 
   private
-  attr_reader :upper_limit, :lower_limit
+
+  DEFAULT_LIMIT = 90
+  DEFAULT_MIN = 0
+  MINIMUM_FARE = 1
+
+  def top_up_fail(value)
+    fail 'Please input an integer' unless is_number?(value)
+    fail 'Exceeded limit' if limit?(value)
+  end
 
   def deduct(value)
+    deduct_fail(value)
     @balance -= value
+  end
+  
+  def deduct_fail(value)
+    fail "Please input an integer" unless is_number?(value)
+    fail "Insufficient funds" if empty?(value)
+  end
+
+  def empty?(value)
+    (@balance - value) < DEFAULT_MIN
+  end
+
+  def limit?(value)
+    (@balance + value ) > DEFAULT_LIMIT
+  end
+
+  def is_number?(value)
+    value.is_a? Integer
+  end
+
+  def in_journey?
+    return true if entry_station
+    false
   end
 end
