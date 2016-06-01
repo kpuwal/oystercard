@@ -8,8 +8,8 @@ describe 'feature test' do
 	# my_card.top_up(90)
 	fare = 2 
 	#my_card.deduct(fare)
-	my_card.in_journey?
-	my_card.touch_in
-	my_card.touch_out
+	# my_card.entry_station
+	# my_card.touch_in
+	#my_card.entry_station?
 	
 end 
