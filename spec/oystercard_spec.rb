@@ -16,6 +16,13 @@ describe Oystercard do
 
   end
 
+  describe "#touch_in tests" do
+
+  it "Will not allow touch_in if balance is less than minimum fare" do
+  	expect {oystercard.touch_in}.to raise_error "ERROR: Insufficient funds"
+    end
+  end	
+
 
   describe "Methods" do
 
@@ -31,9 +38,9 @@ describe Oystercard do
   	expect {oystercard.top_up(1)}.to raise_error "ERROR: Balance limit is £ #{Oystercard::MAXIMUM_BALANCE}"
   end
 
-  it "Deducts a specified fare" do
-	expect{ subject.deduct 3}.to change{ subject.balance }.by -3 
-  end 
+ #  it "Deducts a specified fare" do
+	# expect{ subject.deduct 3}.to change{ subject.balance }.by -3 
+ #  end 
 
   it "Touches in at the beginning of journey" do
     oystercard.touch_in
@@ -46,11 +53,8 @@ describe Oystercard do
   	expect(oystercard.in_journey?).to be false
   end
 
-  it "Will not allow touch_in if balance is less than minimum fare" do
-  	oystercard.deduct(Oystercard::MAXIMUM_BALANCE)
-  	minimum = Oystercard::MINIMUM_FARE
-  	oystercard.top_up(minimum - 1)
-  	expect {oystercard.touch_in}.to raise_error "ERROR: Insufficient funds"
+  it "charges card on touch out" do
+  	expect {oystercard.touch_out}.to change{oystercard.balance}.by(-Oystercard::MINIMUM_FARE)
   end
 
 end
