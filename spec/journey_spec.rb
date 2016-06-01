@@ -1,21 +1,20 @@
 require 'journey'
 
 describe Journey do 
-  subject(:journey) {described_class.new}
 
-  let(:station1) {double(:station1, :data => {:monument => 1})}
-  let(:station2) {double(:station2, :data => {:bank => 2})}
-
-
-  context ':journeys' do
+	context ':journeys' do
     before(:each) do
-      journey.start(station1)
+      card.top_up(5)
     end
 
     it 'generates an empty hash' do
-      expect(journey.journeys).to be_a(Hash)
+      expect(card.journeys).to be_a(Hash)
     end
     context "journey generation" do
+      before(:each) do
+        card.touch_in(station1)
+        card.touch_out(station2)
+      end
 
       it 'generates a journey' do
         expect(card.journeys).to eq({station1 => station2})
@@ -31,4 +30,5 @@ describe Journey do
       end
     end
   end
+	
 end
