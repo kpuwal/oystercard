@@ -59,5 +59,10 @@ describe Oystercard do
   	expect(oystercard.entry_station).to eq station
   end
 
+  it 'forgets entry_station on touch out' do
+  	oystercard.touch_out
+  	expect(oystercard.entry_station).to be nil
+  end
+
 end
 end
