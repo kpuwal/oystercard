@@ -4,7 +4,8 @@ require 'oystercard'
 describe Oystercard do	
   subject(:oystercard) {described_class.new}
   let(:station_in) {double(:station_in)}
-  let(:station_out) {double(:station_out)}	
+  let(:station_out) {double(:station_out)}
+  
 
   describe "Attributes" do
 
@@ -12,9 +13,9 @@ describe Oystercard do
         expect(oystercard.balance).to eq 0
    	end
 
-   	it "Each oystercard is initialized as not in journey" do
-      expect(oystercard.in_journey?).to be false
-    end
+   	# it "Each oystercard is initialized as not in journey" do
+    #   expect(oystercard.in_journey?).to be false
+    # end
 
   end
 
@@ -24,11 +25,7 @@ describe Oystercard do
     	expect {oystercard.touch_in(station_in)}.to raise_error "ERROR: Insufficient funds"
     end
 
-    it "Touches in at the beginning of journey" do
-      oystercard.top_up(Oystercard::MAXIMUM_BALANCE)
-      oystercard.touch_in(station_in)
-      expect(oystercard.in_journey?).to be true
-    end
+   
 
     it "Remembers station when touched in" do
       oystercard.top_up(Oystercard::MAXIMUM_BALANCE) 
@@ -40,12 +37,7 @@ describe Oystercard do
 
   describe "touch_out" do
 
-    it "Touches out at the end of the journey" do
-      oystercard.top_up(Oystercard::MAXIMUM_BALANCE)
-    	oystercard.touch_in(station_in)
-    	oystercard.touch_out(station_out)
-    	expect(oystercard.in_journey?).to be false
-    end
+  
 
     it "charges card on touch out" do
     	expect {oystercard.touch_out(station_out)}.to change{oystercard.balance}.by(-Oystercard::MINIMUM_FARE)
